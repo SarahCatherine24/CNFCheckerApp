@@ -1,10 +1,12 @@
 package com.example.cnfchecker;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText stringInput;
     private Button checkStringBtn, checkGrammarBtn;
     private TextView grammarProductions, output;
-
+    private RelativeLayout mainLayout;
     private List<String[]> grammarProductionsList = new ArrayList<>();
 
     @Override
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         checkGrammarBtn = findViewById(R.id.checkGrammarBtn);
         grammarProductions = findViewById(R.id.grammarProductions);
         output = findViewById(R.id.output);
+        mainLayout = findViewById(R.id.mainLayout);
 
         checkGrammarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,11 +48,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkGrammar() {
-        // Prompt for grammar rules
-        int numRules = 3; // Example number of rules for simplicity
-        grammarProductionsList.clear(); // Clear existing rules
-
-        // Example rules for simplicity
+        // Example grammar rules for simplicity
+        grammarProductionsList.clear();
         grammarProductionsList.add(new String[]{"S", "AB"});
         grammarProductionsList.add(new String[]{"A", "a"});
         grammarProductionsList.add(new String[]{"B", "b"});
@@ -75,7 +75,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         boolean result = stringCheck(inputString);
-        output.setText(result ? "String is accepted" : "String is not accepted");
+        if (result) {
+            output.setText("String is accepted");
+            mainLayout.setBackgroundColor(Color.GREEN);
+        } else {
+            output.setText("String is not accepted");
+            mainLayout.setBackgroundColor(Color.RED);
+        }
     }
 
     private boolean stringCheck(String inputString) {

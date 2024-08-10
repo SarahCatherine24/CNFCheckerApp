@@ -1,73 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2e2e2e"
-    tools:context=".MainActivity">
+    android:padding="16dp"
+    android:background="#434343"> <!-- Dark grey background for the layout -->
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/dsilogo" /> <!-- Replace with your logo image resource -->
+
+    <TextView
+        android:id="@+id/grammarProductions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grammar Productions"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:layout_below="@id/logoImage"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/stringInput"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/grammarProductions"
+        android:layout_marginTop="16dp"
+        android:hint="Enter string"
+        android:textSize="18sp"
+        android:padding="12dp"
+        android:background="#333"
+        android:textColor="#ffffff"
+        android:enabled="false" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="String and Grammar Checker"
-            android:textSize="24sp"
-            android:textColor="#ffffff"
-            android:layout_gravity="center"
-            android:paddingBottom="16dp"
-            android:gravity="center"/>
+    <Button
+        android:id="@+id/checkGrammarBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check Grammar"
+        android:layout_below="@id/stringInput"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:background="#ff79c6" /> <!-- Pink background -->
 
-        <TextView
-            android:id="@+id/grammarProductions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:paddingBottom="16dp"/>
+    <Button
+        android:id="@+id/checkStringBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check String"
+        android:layout_below="@id/checkGrammarBtn"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:background="#ff79c6"
+        android:enabled="false" />
 
-        <EditText
-            android:id="@+id/stringInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter string"
-            android:background="#333"
-            android:textColor="#ffffff"
-            android:padding="8dp"
-            android:enabled="false"/>
-
-        <Button
-            android:id="@+id/checkStringBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Check String"
-            android:background="#ff79c6"
-            android:textColor="#2e2e2e"
-            android:padding="10dp"
-            android:layout_marginTop="8dp"
-            android:enabled="false"/>
-
-        <Button
-            android:id="@+id/checkGrammarBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Check Grammar"
-            android:background="#ff79c6"
-            android:textColor="#2e2e2e"
-            android:padding="10dp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/output"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:paddingTop="16dp"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkStringBtn"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:visibility="gone" />
 
 </RelativeLayout>
