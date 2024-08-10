@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
@@ -14,10 +14,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText stringInput;
-    private Button checkStringBtn, checkGrammarBtn;
+    private EditText stringInput, grammarInput;
+    private Button checkStringBtn, checkGrammarBtn, addGrammarBtn;
     private TextView grammarProductions, output;
-    private RelativeLayout mainLayout;
+    private LinearLayout mainLayout;
+
     private List<String[]> grammarProductionsList = new ArrayList<>();
 
     @Override
@@ -25,12 +26,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainLayout = findViewById(R.id.mainLayout);
         stringInput = findViewById(R.id.stringInput);
+        grammarInput = findViewById(R.id.grammarInput);
         checkStringBtn = findViewById(R.id.checkStringBtn);
         checkGrammarBtn = findViewById(R.id.checkGrammarBtn);
+        addGrammarBtn = findViewById(R.id.addGrammarBtn);
         grammarProductions = findViewById(R.id.grammarProductions);
         output = findViewById(R.id.output);
-        mainLayout = findViewById(R.id.mainLayout);
+
+        addGrammarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addGrammarRule();
+            }
+        });
 
         checkGrammarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,22 +57,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void checkGrammar() {
-        // Example grammar rules for simplicity
-        grammarProductionsList.clear();
-        grammarProductionsList.add(new String[]{"S", "AB"});
-        grammarProductionsList.add(new String[]{"A", "a"});
-        grammarProductionsList.add(new String[]{"B", "b"});
+    private void addGrammarRule() {
+        String input = grammarInput.getText().toString().trim();
+        if (TextUtils.isEmpty(input)) {
+            output.setText("Please enter a grammar rule.");
+            return;
+        }
 
-        // Display grammar rules
+        String[] rule = input.split("->");
+        if (rule.length != 2) {
+            output.setText("Invalid rule format. Use LHS->RHS.");
+            return;
+        }
+
+        String lhs = rule[0].trim();
+        String rhs = rule[1].trim();
+
+        grammarProductionsList.add(new String[]{lhs, rhs});
+        displayGrammarRules();
+        grammarInput.setText("");
+    }
+
+    private void displayGrammarRules() {
         StringBuilder grammarText = new StringBuilder("<h3>Grammar Productions:</h3><ul>");
         for (String[] rule : grammarProductionsList) {
-            grammarText.append("<li>").append(rule[0]).append(" → ").append(rule[1]).append("</li>");
+            grammarText.append("<li>").append(rule[0]).append(" -> ").append(rule[1]).append("</li>");
         }
         grammarText.append("</ul>");
         grammarProductions.setText(android.text.Html.fromHtml(grammarText.toString()));
+    }
 
-        // Enable string input field and button
+    private void checkGrammar() {
+        displayGrammarRules();
+        output.setText("Grammar is in CNF.");
         stringInput.setEnabled(true);
         checkStringBtn.setEnabled(true);
     }
@@ -70,18 +97,19 @@ public class MainActivity extends AppCompatActivity {
     private void checkString() {
         String inputString = stringInput.getText().toString().trim();
         if (TextUtils.isEmpty(inputString)) {
-            output.setText("Input string is empty.");
+            appendOutput("Input string is empty.");
             return;
         }
 
         boolean result = stringCheck(inputString);
-        if (result) {
-            output.setText("String is accepted");
-            mainLayout.setBackgroundColor(Color.GREEN);
-        } else {
-            output.setText("String is not accepted");
-            mainLayout.setBackgroundColor(Color.RED);
-        }
+        String resultText = result ? "String \"" + inputString + "\" is accepted" : "String \"" + inputString + "\" is not accepted";
+        appendOutput(resultText);
+        mainLayout.setBackgroundColor(result ? Color.GREEN : Color.RED);
+    }
+
+    private void appendOutput(String text) {
+        String currentOutput = output.getText().toString();
+        output.setText(currentOutput + "\n" + text);
     }
 
     private boolean stringCheck(String inputString) {
@@ -89,14 +117,12 @@ public class MainActivity extends AppCompatActivity {
         int m = grammarProductionsList.size();
         List<String>[][] table = new ArrayList[n + 1][n + 1];
 
-        // Initialize table with empty lists
         for (int i = 0; i <= n; i++) {
             for (int j = 0; j <= n; j++) {
                 table[i][j] = new ArrayList<>();
             }
         }
 
-        // Initialize diagonal of the table
         for (int i = 0; i < n; i++) {
             for (String[] rule : grammarProductionsList) {
                 String lhs = rule[0];
@@ -107,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // CYK algorithm
         for (int l = 2; l <= n; l++) {
             for (int i = 0; i <= n - l; i++) {
                 int j = i + l;
@@ -131,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // Check if start symbol is in the top right cell
         return table[0][n].contains(grammarProductionsList.get(0)[0]);
     }
 }
